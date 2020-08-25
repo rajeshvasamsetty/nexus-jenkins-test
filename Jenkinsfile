@@ -4,6 +4,10 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '10'))
     disableConcurrentBuilds()
   }
+    environment {
+      NEXUS_USERNAME = credentials('NEXUS_USERNAME')
+      NEXUS_PASSWORD = credentials('NEXUS_PASSWORD')
+    }
   agent any
   stages {
     stage('Build') {
@@ -78,7 +82,7 @@ pipeline {
       emailext (attachLog: true, body: "${currentBuild.result}: ${BUILD_URL}", //compressLog: true, 
                 subject: "Jenkins build back to normal: ${currentBuild.fullDisplayName}", 
               //  recipientProviders: [[$class: 'CulpritsRecipientProvider'],[$class: 'RequesterRecipientProvider']],
-                to: 'smandal@rythmos.com')
+                to: 'rvasamsetty@rythmos.com')
     }
     failure {
         emailext (attachmentsPattern: 'build_fail.log',
@@ -92,7 +96,7 @@ pipeline {
       emailext (attachLog: true, body: "${currentBuild.result}: ${BUILD_URL}", //compressLog: true, 
                 subject: "Unstable Pipeline: ${currentBuild.fullDisplayName}", 
                // recipientProviders: [[$class: 'CulpritsRecipientProvider'],[$class: 'RequesterRecipientProvider']],
-                to: 'smandal@rythmos.com')
+                to: 'rvasamsetty@rythmos.com')
     }
   }
   }
